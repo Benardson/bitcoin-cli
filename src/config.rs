@@ -1,5 +1,3 @@
-use anyhow::Result;
-use dotenvy::dotenv;
 use std::env;
 
 pub struct Config {
@@ -9,13 +7,18 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn load() -> Result<Self> {
-        dotenv().ok();
+    pub fn from_env() -> Self {
+        dotenvy::dotenv().ok();
 
-        Ok(Self {
-            rpc_url: env::var("RPC_URL")?,
-            rpc_user: env::var("RPC_USER")?,
-            rpc_password: env::var("RPC_PASSWORD")?,
-        })
+        Self {
+            rpc_url: env::var("RPC_URL")
+                .expect("Missing RPC_URL in .env"),
+
+            rpc_user: env::var("RPC_USER")
+                .expect("Missing RPC_USER in .env"),
+
+            rpc_password: env::var("RPC_PASSWORD")
+                .expect("Missing RPC_PASSWORD in .env"),
+        }
     }
 }
