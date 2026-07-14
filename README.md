@@ -94,7 +94,7 @@ Clone the repository:
 
 ```bash
 
-git clone <repository-url>
+git clone <https://github.com/Benardson/bitcoin-cli.git>
 
 cd bitcoin-cli
 
