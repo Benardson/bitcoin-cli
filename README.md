@@ -1,5 +1,11 @@
 \# Bitcoin CLI - Rust Bitcoin Core RPC Client
 
+\## Notes
+
+
+
+This project was developed as part of the Rust for Bitcoin 2.0 technical assessment.
+
 
 
 \## Project Description
