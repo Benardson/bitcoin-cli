@@ -1,5 +1,7 @@
 \# Bitcoin CLI - Rust Bitcoin Core RPC Client
 
+
+
 \## Notes
 
 
@@ -16,7 +18,7 @@ A Rust command-line application that communicates with a local Bitcoin Core regt
 
 
 
-The application provides common Bitcoin Core operations through a simple CLI and also supports executing generic RPC commands.
+The application provides common Bitcoin Core operations through a simple CLI and supports executing generic RPC commands with dynamic parameters.
 
 
 
@@ -26,17 +28,19 @@ The application provides common Bitcoin Core operations through a simple CLI and
 
 \* Connects to Bitcoin Core using JSON-RPC
 
-\* Supports regtest network
+\* Supports Bitcoin Regtest network
 
-\* Query blockchain information
+\* Displays blockchain information
 
-\* Query wallet information
+\* Displays wallet information
 
-\* Retrieve wallet balance
+\* Retrieves wallet balance
 
-\* Generate new wallet addresses
+\* Generates new wallet addresses
 
-\* Execute arbitrary Bitcoin Core RPC methods
+\* Executes arbitrary Bitcoin Core RPC methods
+
+\* Loads RPC configuration from environment variables
 
 
 
@@ -48,7 +52,41 @@ The application provides common Bitcoin Core operations through a simple CLI and
 
 \* Bitcoin Core
 
-\* Running Bitcoin Core regtest node
+\* Polar (for creating a local Regtest environment)
+
+\* Running Bitcoin Core Regtest node
+
+
+
+\## Polar Setup
+
+
+
+1\. Install Polar.
+
+2\. Create a new Regtest network.
+
+3\. Create and start a Bitcoin Core node.
+
+4\. Copy the RPC URL, username, and password from the node settings.
+
+5\. Configure the application using the `.env` file.
+
+
+
+Example `.env`:
+
+
+
+```env
+
+RPC\_URL=http://127.0.0.1:18443
+
+RPC\_USER=bitcoin
+
+RPC\_PASSWORD=bitcoin123
+
+```
 
 
 
@@ -56,7 +94,11 @@ The application provides common Bitcoin Core operations through a simple CLI and
 
 
 
-Start Bitcoin Core in regtest mode:
+The application connects to Bitcoin Core using JSON-RPC.
+
+
+
+Example Regtest configuration:
 
 
 
@@ -72,7 +114,7 @@ bitcoind -regtest -server \\
 
 
 
-The application expects Bitcoin Core RPC at:
+Default RPC endpoint:
 
 
 
@@ -94,7 +136,7 @@ Clone the repository:
 
 ```bash
 
-git clone <https://github.com/Benardson/bitcoin-cli.git>
+git clone https://github.com/Benardson/bitcoin-cli.git
 
 cd bitcoin-cli
 
@@ -122,6 +164,10 @@ cargo build
 
 
 
+Command:
+
+
+
 ```bash
 
 cargo run -- blockchain-info
@@ -142,7 +188,11 @@ Example output:
 
 &#x20; "blocks": 101,
 
-&#x20; "headers": 101
+&#x20; "headers": 101,
+
+&#x20; "difficulty": 4.6565423739069247e-10,
+
+&#x20; "verificationprogress": 1
 
 }
 
@@ -150,7 +200,15 @@ Example output:
 
 
 
+\---
+
+
+
 \### Wallet Information
+
+
+
+Command:
 
 
 
@@ -172,7 +230,7 @@ Example output:
 
 &#x20; "walletname": "testwallet",
 
-&#x20; "private\_keys\_enabled": true
+&#x20; "txcount": 101
 
 }
 
@@ -180,7 +238,15 @@ Example output:
 
 
 
+\---
+
+
+
 \### Wallet Balance
+
+
+
+Command:
 
 
 
@@ -204,7 +270,15 @@ Example output:
 
 
 
+\---
+
+
+
 \### Generate New Address
+
+
+
+Command:
 
 
 
@@ -228,11 +302,19 @@ bcrt1qprdgyga0w9zrejrrmx4t0mlj2086yggew7dwd7
 
 
 
+\---
+
+
+
 \### Generic RPC Command
 
 
 
-Execute any Bitcoin Core RPC method:
+The CLI supports executing arbitrary Bitcoin Core RPC methods.
+
+
+
+Example:
 
 
 
@@ -244,13 +326,25 @@ cargo run -- rpc getblockcount
 
 
 
-Example output:
+Output:
 
 
 
 ```text
 
 101
+
+```
+
+
+
+Example with parameters:
+
+
+
+```bash
+
+cargo run -- rpc getblockhash 100
 
 ```
 
@@ -298,13 +392,17 @@ bitcoin-cli/
 
 ├── .gitignore
 
+├── .env
+
 │
 
 └── src/
 
 &#x20;   ├── main.rs
 
-&#x20;   └── rpc.rs
+&#x20;   ├── rpc.rs
+
+&#x20;   └── config.rs
 
 ```
 
@@ -316,9 +414,11 @@ bitcoin-cli/
 
 \* The application requires Bitcoin Core to be running before executing commands.
 
-\* The project was developed and tested using Bitcoin Core regtest mode.
+\* The project was developed and tested using Bitcoin Core Regtest mode.
 
-\* RPC authentication is configured using username and password.
+\* RPC credentials are configured through environment variables.
+
+\* The application uses asynchronous Rust with Tokio and communicates through Bitcoin Core JSON-RPC.
 
 
 
